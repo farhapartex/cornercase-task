@@ -6,3 +6,7 @@ class RoleChoices(models.TextChoices):
     OWNER = "owner", "Owner"
     EMPLOYEE = "employee", "Employee"
 
+    @staticmethod
+    def get_all():
+        return [role for role, _ in RoleChoices.choices]
+
