@@ -60,7 +60,7 @@ class MenuCreateSerializer(serializers.Serializer):
         request_data = {
             "name": validated_data["name"],
             "restaurant": validated_data["restaurant"],
-            "description": validated_data.get("restaurant", ""),
+            "description": validated_data.get("description", ""),
             "price": validated_data["price"],
         }
 
@@ -69,3 +69,20 @@ class MenuCreateSerializer(serializers.Serializer):
 
             return instance
 
+
+class MenuListSerializer(serializers.ModelSerializer):
+    restaurant = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+
+    def get_restaurant(self, instance):
+        return {
+            "id": instance.restaurant.id,
+            "name": instance.restaurant.name
+        }
+
+    def get_created_at(self, instance):
+        return str(instance.created_at.date())
+
+    class Meta:
+        model = Menu
+        fields = ("id", "name", "price", "restaurant", "created_at")
