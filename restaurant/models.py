@@ -9,7 +9,7 @@ class Restaurant(BaseAbstractModel):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return str(self.id)
+        return self.name
 
 
 class Menu(BaseAbstractModel):
