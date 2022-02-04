@@ -16,3 +16,7 @@ class IsEmployee(BasePermission):
     def has_permission(self, request, view):
         return request.user.role == RoleChoices.EMPLOYEE.value
 
+
+class IsAdminOrOwner(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role in [RoleChoices.ADMIN.value, RoleChoices.OWNER.value]
