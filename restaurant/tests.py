@@ -1,5 +1,7 @@
+from datetime import datetime
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework.test import APIClient
 from rest_framework import status
 from user.models import User
@@ -168,4 +170,53 @@ class MenuCreateTestCase(TestCase):
             "price": 20.00
         }
         response = self.client.post(reverse("create-menu"), data=request_data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class MenuListTestCase(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.user_admin = User.objects.create(username="dev1@test.com", email="dev1@test.com",
+                                              role=RoleChoices.ADMIN.value)
+        self.user_admin.set_password("Test123")
+        self.user_employee = User.objects.create(username="dev2@test.com", email="dev2@test.com",
+                                                 role=RoleChoices.EMPLOYEE.value)
+        self.user_employee.set_password("Test123")
+        self.user_owner1 = User.objects.create(username="dev3@test.com", email="dev3@test.com",
+                                              role=RoleChoices.OWNER.value)
+        self.user_owner1.set_password("Test123")
+        self.user_owner2 = User.objects.create(username="dev4@test.com", email="dev4@test.com",
+                                              role=RoleChoices.OWNER.value)
+        self.user_owner2.set_password("Test123")
+
+        restaurant1 = Restaurant.objects.create(owner=self.user_owner1, name="Test Restaurant 1")
+        restaurant2 = Restaurant.objects.create(owner=self.user_owner2, name="Test Restaurant 1")
+
+        Menu.objects.create(name="Test menu 1", restaurant=restaurant1, price=200.00)
+        Menu.objects.create(name="Test menu 2", restaurant=restaurant2, price=200.00)
+        Menu.objects.create(name="Test menu 3", restaurant=restaurant2, price=200.00)
+        self.menu = Menu.objects.create(name="Test menu 4", restaurant=restaurant2, price=200.00)
+        self.menu.created_at = datetime(2022,2,3)
+        self.menu.save()
+
+    def test_api_menu_list_by_employee(self):
+        self.client.force_authenticate(user=self.user_employee)
+        response = self.client.get(reverse("menu-list"), format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), Menu.objects.filter(created_at__date=timezone.now().date()).count())
+
+    def test_api_menu_list_with_filter(self):
+        self.client.force_authenticate(user=self.user_employee)
+        response = self.client.get(f"{reverse('menu-list')}?created_at=2022-02-03", format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_api_menu_list_by_admin(self):
+        self.client.force_authenticate(user=self.user_admin)
+        response = self.client.get(reverse("menu-list"), format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_api_menu_list_by_owner(self):
+        self.client.force_authenticate(user=self.user_owner1)
+        response = self.client.get(reverse("menu-list"), format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

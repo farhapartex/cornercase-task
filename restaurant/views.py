@@ -3,7 +3,7 @@ from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
-from user.permissions import IsAdminOrOwner, IsOwner
+from user.permissions import IsAdminOrOwner, IsOwner, IsEmployee
 from restaurant.serializers import RestaurantCreateSerializer, MenuCreateSerializer, MenuListSerializer
 from restaurant.models import Restaurant, Menu
 from restaurant.filters import MenuFilter
@@ -33,7 +33,7 @@ class MenuCreateAPIView(generics.CreateAPIView):
 class MenuListAPIView(generics.ListAPIView):
     queryset = Menu.objects.all()
     serializer_class = MenuListSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsEmployee)
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = MenuFilter
 
