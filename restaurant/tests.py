@@ -203,13 +203,7 @@ class MenuListTestCase(TestCase):
         self.client.force_authenticate(user=self.user_employee)
         response = self.client.get(reverse("menu-list"), format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), Menu.objects.filter(created_at__date=timezone.now().date()).count())
-
-    def test_api_menu_list_with_filter(self):
-        self.client.force_authenticate(user=self.user_employee)
-        response = self.client.get(f"{reverse('menu-list')}?created_at=2022-02-03", format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), Restaurant.objects.all().count())
 
     def test_api_menu_list_by_admin(self):
         self.client.force_authenticate(user=self.user_admin)

@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import serializers
 from restaurant.models import Restaurant, Menu
 from user.enums import RoleChoices
@@ -70,19 +71,19 @@ class MenuCreateSerializer(serializers.Serializer):
             return instance
 
 
-class MenuListSerializer(serializers.ModelSerializer):
-    restaurant = serializers.SerializerMethodField()
-    created_at = serializers.SerializerMethodField()
-
-    def get_restaurant(self, instance):
-        return {
-            "id": instance.restaurant.id,
-            "name": instance.restaurant.name
-        }
-
-    def get_created_at(self, instance):
-        return str(instance.created_at.date())
-
+class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
-        fields = ("id", "name", "price", "restaurant", "created_at")
+        fields = ("id", "name", "price")
+
+
+class RestaurantMenuListSerializer(serializers.ModelSerializer):
+    menus = serializers.SerializerMethodField()
+
+    def get_menus(self, instance):
+        queryset = instance.menus.filter(created_at__date=timezone.now().date())
+        return MenuSerializer(queryset, many=True).data
+
+    class Meta:
+        model = Restaurant
+        fields = ("id", "name", "menus",)
