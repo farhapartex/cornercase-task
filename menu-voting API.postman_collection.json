@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "455b3122-6672-4666-bba1-50516a8bd412",
+		"name": "menu-voting API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login API",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"dev3@test.com\",\n    \"password\": \"Test123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/token/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"token",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-employee",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQzOTQzODY5LCJpYXQiOjE2NDM5NDM1NjksImp0aSI6ImVjOWNkMzBlODk1ZTRiNDI5MTU2MzI2M2RjYjQyMDI3IiwidXNlcl9pZCI6MX0.hvAdWvM1mWU8FPIX9I8OsHjED6DEB2xJMMjhJyWpU28",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Nazmul\",\n    \"email\": \"dev5@test.com\",\n    \"password\": \"Test123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v1/create-user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"create-user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-restaurant",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQzOTUyNTY5LCJpYXQiOjE2NDM5NTIyNjksImp0aSI6IjZhZTg5MGQzODBkYjQ0NjRiMTA0OGJmOGRhZGJkM2NlIiwidXNlcl9pZCI6MTB9.Rmov14JEwjEOQsZKqz8X7hsts8YSRftbS5XP0JLiVlc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test 1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v1/create-restaurant/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"create-restaurant",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-menu",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQzOTgwMjAzLCJpYXQiOjE2NDM5Nzk5MDMsImp0aSI6Ijk4ZTIyNzQ2Y2EwNjQ1ZjFhNDFmYjFhMjZlOWUyOTg5IiwidXNlcl9pZCI6OH0.dgAHk0bpBRAhH7Xv8RVB_KSjIZhim16b0gZ3cbacEM4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Egg fried rice\",\n    \"restaurant_id\": 2,\n    \"price\": 215.00\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v1/create-menu/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"create-menu",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "menu-list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQzOTgwMjAzLCJpYXQiOjE2NDM5Nzk5MDMsImp0aSI6Ijk4ZTIyNzQ2Y2EwNjQ1ZjFhNDFmYjFhMjZlOWUyOTg5IiwidXNlcl9pZCI6OH0.dgAHk0bpBRAhH7Xv8RVB_KSjIZhim16b0gZ3cbacEM4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/menus/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"menus",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vote for menu",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "vote-result",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		}
+	]
+}

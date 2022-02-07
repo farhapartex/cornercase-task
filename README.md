@@ -29,3 +29,5 @@
 * Run the server `python manage.py runserver`
 * Swagger doc: `http://localhost:8000/swagger/`
 
+
+#### In your postman import `menu-voting API.postman_collection.json` for API collection
