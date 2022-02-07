@@ -1,7 +1,10 @@
+import logging
 from django.db import transaction
 from rest_framework import serializers
 from user.models import User
 from user.enums import RoleChoices
+
+logger = logging.getLogger("django")
 
 
 class UserCreateSerializer(serializers.Serializer):
@@ -28,5 +31,6 @@ class UserCreateSerializer(serializers.Serializer):
             user = User.objects.create(**request_data)
             user.set_password(validated_data.get("password"))
             user.save()
+            logger.info(f"{user.username} created successfully")
 
             return user

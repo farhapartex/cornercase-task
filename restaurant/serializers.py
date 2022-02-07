@@ -1,3 +1,4 @@
+import logging
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -5,6 +6,8 @@ from rest_framework import serializers
 from restaurant.models import Restaurant, Menu
 from user.enums import RoleChoices
 from user.models import User
+
+logger = logging.getLogger(__name__)
 
 
 class RestaurantCreateSerializer(serializers.Serializer):
@@ -37,6 +40,7 @@ class RestaurantCreateSerializer(serializers.Serializer):
 
         with transaction.atomic():
             instance = Restaurant.objects.create(**request_body)
+            logger.info(f"Restaurant {instance.name} {instance.id} created")
             return instance
 
 
@@ -67,6 +71,7 @@ class MenuCreateSerializer(serializers.Serializer):
 
         with transaction.atomic():
             instance = Menu.objects.create(**request_data)
+            logger.info(f"Menu {instance.name} {instance.id} created for Restaurant: {instance.restaurant.name}")
 
             return instance
 

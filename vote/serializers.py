@@ -1,3 +1,4 @@
+import logging
 from django.db import transaction
 from django.utils import timezone
 from django.db.models import Count
@@ -5,6 +6,8 @@ from rest_framework import serializers
 from user.enums import RoleChoices
 from restaurant.models import Restaurant
 from vote.models import Vote, VoteResult
+
+logger = logging.getLogger(__name__)
 
 
 class VoteCreateSerializer(serializers.Serializer):
@@ -41,10 +44,12 @@ class VoteCreateSerializer(serializers.Serializer):
 
         with transaction.atomic():
             instance = Vote.objects.create(**request_data)
+            logger.info(f"Vote created by {instance.employee.username} for restaurant: {instance.restaurant.name}")
 
             vote_result = VoteResult.objects.filter(created_at__date=timezone.now().date()).first()
             if vote_result is None:
                 VoteResult.objects.create(restaurant=instance.restaurant, votes=1)
+                logger.info(f"Vote result not found for today, created new one")
             else:
                 votes = Vote.objects.filter(created_at__date=timezone.now().date()).values_list('restaurant').annotate(res_count=Count('restaurant')).order_by(
                     '-res_count')
