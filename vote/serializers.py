@@ -48,7 +48,14 @@ class VoteCreateSerializer(serializers.Serializer):
             else:
                 votes = Vote.objects.filter(created_at__date=timezone.now().date()).values_list('restaurant').annotate(res_count=Count('restaurant')).order_by(
                     '-res_count')
+                all_votes = VoteResult.objects.all().order_by("-id")
+
                 restaurant = Restaurant.get_restaurant_instance(id=votes[0][0])
+                if all_votes.count() >= 3:
+                    if all_votes[0].restaurent.id == restaurant.id and all_votes[1].restaurent.id == restaurant.id and all_votes[2].restaurent.id == restaurant.id:
+                        if len(votes) > 1:
+                            restaurant = Restaurant.get_restaurant_instance(id=votes[1][0])
+
                 vote_result.restaurant = restaurant
                 vote_result.votes = votes[0][1]
                 vote_result.save()
