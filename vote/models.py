@@ -18,5 +18,16 @@ class Vote(BaseAbstractModel):
         vote = Vote.objects.filter(employee=employee, created_at__date=timezone.now().date()).first()
         return True if vote else False
 
+    @classmethod
+    def get_vote_instance_by_restaurant(cls, restaurant_id):
+        vote = Vote.objects.filter(restaurant_id=restaurant_id).first()
+        return vote
 
 
+
+class VoteResult(BaseAbstractModel):
+    restaurant = models.ForeignKey(Restaurant, related_name="wins", on_delete=models.DO_NOTHING)
+    votes = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.restaurant}-{self.votes}"

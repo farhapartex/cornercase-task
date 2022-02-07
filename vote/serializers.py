@@ -1,10 +1,10 @@
 from django.db import transaction
 from django.utils import timezone
+from django.db.models import Count
 from rest_framework import serializers
-from user.models import User
 from user.enums import RoleChoices
 from restaurant.models import Restaurant
-from vote.models import Vote
+from vote.models import Vote, VoteResult
 
 
 class VoteCreateSerializer(serializers.Serializer):
@@ -42,6 +42,33 @@ class VoteCreateSerializer(serializers.Serializer):
         with transaction.atomic():
             instance = Vote.objects.create(**request_data)
 
+            vote_result = VoteResult.objects.filter(created_at__date=timezone.now().date()).first()
+            if vote_result is None:
+                VoteResult.objects.create(restaurant=instance.restaurant, votes=1)
+            else:
+                votes = Vote.objects.filter(created_at__date=timezone.now().date()).values_list('restaurant').annotate(res_count=Count('restaurant')).order_by(
+                    '-res_count')
+                restaurant = Restaurant.get_restaurant_instance(id=votes[0][0])
+                vote_result.restaurant = restaurant
+                vote_result.votes = votes[0][1]
+                vote_result.save()
+
             return instance
 
 
+class VoteResultSerializer(serializers.ModelSerializer):
+    restaurant = serializers.SerializerMethodField()
+    result_date = serializers.SerializerMethodField()
+
+    def get_restaurant(self, instance):
+        return {
+            "id": instance.restaurant.id,
+            "name": instance.restaurant.name
+        }
+
+    def get_result_date(self, instance):
+        return str(instance.created_at.date())
+
+    class Meta:
+        model = VoteResult
+        fields = ("id", "restaurant", "votes", "result_date")
