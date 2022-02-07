@@ -9,7 +9,11 @@ class Restaurant(BaseAbstractModel):
     name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}-{self.id}"
+
+    @classmethod
+    def get_restaurant_instance(cls, *, id):
+        return cls.objects.filter(id=id).first()
 
 
 class Menu(BaseAbstractModel):
